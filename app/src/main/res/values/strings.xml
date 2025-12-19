@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">StockUp</string>
+    <string name="title_manage_category">Manage Category</string>
+    <string name="title_manage_data">Manage Data</string>
+    <string name="body_new_category_name">New Category Name</string>
+    <string name="label_add_delete_category">Add or delete category</string>
+</resources>
