@@ -51,7 +51,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.wannacry.stockup.R
-import com.wannacry.stockup.presentation.viewmodel.BaseStockUpViewModel
+import com.wannacry.stockup.presentation.viewmodel.SettingViewModel
 import org.koin.androidx.compose.koinViewModel
 
 @RequiresApi(Build.VERSION_CODES.O)
@@ -59,7 +59,7 @@ import org.koin.androidx.compose.koinViewModel
 @Composable
 fun SettingsScreen(
     navController: NavController,
-    viewModel: BaseStockUpViewModel = koinViewModel()
+    viewModel: SettingViewModel = koinViewModel()
 ) {
     var showCategoryDialog by remember { mutableStateOf(false) }
     var categoryName by remember { mutableStateOf("") }
@@ -117,12 +117,6 @@ fun SettingsScreen(
                         thickness = 0.5.dp,
                         color = MaterialTheme.colorScheme.outlineVariant
                     )
-//                    SettingsItem(
-//                        icon = Icons.Default.CloudUpload,
-//                        title = "Backup & Pulihkan Data",
-//                        subtitle = "Buat salinan atau pulihkan data pantri anda",
-//                        onClick = { /* Implement Backup logic */ }
-//                    )
                 }
             }
         }

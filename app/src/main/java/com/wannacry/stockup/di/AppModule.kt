@@ -14,6 +14,7 @@ import com.wannacry.stockup.domain.usecase.CategoryUseCase
 import com.wannacry.stockup.domain.usecase.StockUpUseCase
 import com.wannacry.stockup.domain.usecase.TaskUseCase
 import com.wannacry.stockup.presentation.viewmodel.BaseStockUpViewModel
+import com.wannacry.stockup.presentation.viewmodel.SettingViewModel
 import com.wannacry.stockup.presentation.viewmodel.TaskViewModel
 import org.koin.androidx.viewmodel.dsl.viewModel
 
@@ -41,6 +42,7 @@ val domainModule = module {
 val presentationModule = module {
     viewModel { BaseStockUpViewModel(get(), get()) }
     viewModel { TaskViewModel(get(), get(), get()) }
+    viewModel { SettingViewModel(get(), get()) }
 }
 
 @RequiresApi(Build.VERSION_CODES.O)

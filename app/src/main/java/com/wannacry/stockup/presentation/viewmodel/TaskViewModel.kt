@@ -20,7 +20,7 @@ import java.util.UUID
 class TaskViewModel(
     private val useCase: TaskUseCase,
     private val stockUpUseCase: StockUpUseCase,
-    private val categoryUseCase: CategoryUseCase
+    categoryUseCase: CategoryUseCase
 ): BaseStockUpViewModel(stockUpUseCase, categoryUseCase) {
 
     // Task Detail States

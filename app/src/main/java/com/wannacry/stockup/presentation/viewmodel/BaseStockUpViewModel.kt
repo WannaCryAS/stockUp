@@ -25,7 +25,7 @@ import java.util.UUID
 @RequiresApi(Build.VERSION_CODES.O)
 open class BaseStockUpViewModel(
     private val useCase: StockUpUseCase,
-    private val categoryUseCase: CategoryUseCase
+    categoryUseCase: CategoryUseCase
 ) : ViewModel() {
 
     private val _selectedCategory = MutableStateFlow<Category?>(null)
@@ -33,13 +33,6 @@ open class BaseStockUpViewModel(
     private val _searchQuery = MutableStateFlow("")
     private val _itemDetailUiState = MutableStateFlow(ItemDetailUiState())
     val itemDetailUiState: StateFlow<ItemDetailUiState> = _itemDetailUiState.asStateFlow()
-
-//    // Task Detail States
-//    private val _selectedTask = MutableStateFlow<Task?>(null)
-//    val selectedTask: StateFlow<Task?> = _selectedTask.asStateFlow()
-//
-//    private val _taskItems = MutableStateFlow<List<Item>>(emptyList())
-//    val taskItems: StateFlow<List<Item>> = _taskItems.asStateFlow()
 
     val uiState: StateFlow<HomeUiState> = combine(
         useCase.getAllItems(),
@@ -76,13 +69,6 @@ open class BaseStockUpViewModel(
         initialValue = HomeUiState(isLoading = true)
     )
 
-//    val tasks: StateFlow<List<Task>> = useCase.getTasks()
-//        .stateIn(
-//            scope = viewModelScope,
-//            started = SharingStarted.WhileSubscribed(5000),
-//            initialValue = emptyList()
-//        )
-
     fun onSearchQueryChange(query: String) {
         _searchQuery.value = query
     }
@@ -109,66 +95,6 @@ open class BaseStockUpViewModel(
         }
     }
 
-//    // Task Operations
-//    fun loadTaskDetail(taskId: UUID) {
-//        viewModelScope.launch {
-//            useCase.getTaskById(taskId).collect { task ->
-//                _selectedTask.value = task
-//            }
-//        }
-//        viewModelScope.launch {
-//            useCase.getItemsForTask(taskId).collect { items ->
-//                _taskItems.value = items
-//            }
-//        }
-//    }
-//
-//    fun addTask(title: String, description: String? = null, items: List<Pair<UUID, Double>> = emptyList()) {
-//        viewModelScope.launch {
-//            val task = Task(title = title, description = description)
-//            useCase.addTask(task)
-//            items.forEach { (itemId, qty) ->
-//                useCase.addItemToTask(task.id, itemId, qty)
-//            }
-//        }
-//    }
-//
-//    fun deleteTask(id: UUID) {
-//        viewModelScope.launch {
-//            useCase.deleteTask(id)
-//        }
-//    }
-//
-//    fun addItemToTask(taskId: UUID, itemId: UUID, qty: Double) {
-//        viewModelScope.launch {
-//            useCase.addItemToTask(taskId, itemId, qty)
-//        }
-//    }
-//
-//    fun removeItemFromTask(taskId: UUID, itemId: UUID) {
-//        viewModelScope.launch {
-//            useCase.removeItemFromTask(taskId, itemId)
-//        }
-//    }
-//
-//    fun executeTaskStep(taskId: UUID) {
-//        viewModelScope.launch {
-//            val taskMaterials = useCase.getTaskItemsWithQuantities(taskId)
-//            taskMaterials.forEach { taskItem ->
-//                val currentItem = useCase.getItemById(taskItem.itemId)
-//                if (currentItem != null) {
-//                    val newQuantity = (currentItem.quantity - taskItem.requiredQuantity).coerceAtLeast(0.0)
-//                    val updatedItem = currentItem.copy(
-//                        quantity = newQuantity,
-//                        stockIndicator = stockIndicator(newQuantity.toString(), currentItem.minLimit.toString(), currentItem.expiryDate)
-//                    )
-//                    useCase.updateItem(updatedItem)
-//                }
-//            }
-//        }
-//    }
-
-    // Core Item Operations
     fun addItem(
         name: String,
         quantity: String,
@@ -201,19 +127,6 @@ open class BaseStockUpViewModel(
     fun deleteItem(id: UUID) {
         viewModelScope.launch {
             useCase.deleteItem(id)
-        }
-    }
-
-    fun addCategory(name: String) {
-        viewModelScope.launch {
-            val category = Category(name = name)
-            categoryUseCase.addCategory(category)
-        }
-    }
-
-    fun deleteCategory(id: UUID) {
-        viewModelScope.launch {
-            categoryUseCase.deleteCategory(id)
         }
     }
 
