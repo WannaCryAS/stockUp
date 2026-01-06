@@ -6,12 +6,12 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
@@ -22,10 +22,8 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.DatePicker
 import androidx.compose.material3.DatePickerDialog
-import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.ExposedDropdownMenuBox
 import androidx.compose.material3.ExposedDropdownMenuDefaults
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
@@ -34,6 +32,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Shapes
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBar
@@ -48,11 +47,13 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.wannacry.stockup.domain.data.Category
-import com.wannacry.stockup.presentation.viewmodel.StockUpViewModel
+import com.wannacry.stockup.presentation.components.Dropdown
+import com.wannacry.stockup.presentation.viewmodel.BaseStockUpViewModel
 import org.koin.androidx.compose.koinViewModel
 import java.time.Instant
 import java.time.LocalDate
@@ -65,7 +66,7 @@ import java.util.UUID
 @Composable
 fun AddItemScreen(
     navController: NavController,
-    viewModel: StockUpViewModel = koinViewModel(),
+    viewModel: BaseStockUpViewModel = koinViewModel(),
     itemId: String? = null
 ) {
     val uiState by viewModel.uiState.collectAsState()
@@ -188,7 +189,7 @@ fun AddItemScreen(
                 expanded = categoryMenuExpanded,
                 onExpandChange = { categoryMenuExpanded = it }
             ) {
-                uiState.categories.forEach { category ->
+                uiState.categories.forEachIndexed { index, category ->
                     DropdownMenuItem(
                         text = { Text(category.name) },
                         onClick = {
@@ -197,7 +198,9 @@ fun AddItemScreen(
                         },
                         contentPadding = ExposedDropdownMenuDefaults.ItemContentPadding
                     )
-                    HorizontalDivider(modifier = Modifier.padding(8.dp))
+                    if (index < uiState.categories.lastIndex) {
+                        HorizontalDivider(modifier = Modifier.padding(8.dp))
+                    }
                 }
             }
             Spacer(modifier = Modifier.padding(all = 24.dp))
@@ -222,7 +225,8 @@ fun AddItemScreen(
                 },
                 modifier = Modifier.fillMaxWidth().height(48.dp),
                 colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF20C978)),
-                enabled = name.isNotBlank() && quantity.isNotBlank() && unit.isNotBlank()
+                enabled = name.isNotBlank() && quantity.isNotBlank() && unit.isNotBlank(),
+                shape = RoundedCornerShape(12.dp)
             ) {
                 Text("Simpan", color = Color.White)
             }
@@ -250,45 +254,6 @@ fun AddItemScreen(
             }
         ) {
             DatePicker(state = datePickerState)
-        }
-    }
-}
-
-@OptIn(ExperimentalMaterial3Api::class)
-@Composable
-private fun Dropdown(
-    text: String,
-    expanded: Boolean,
-    onExpandChange: (Boolean) -> Unit,
-    content: @Composable ColumnScope.() -> Unit
-) {
-    ExposedDropdownMenuBox(
-        expanded = expanded,
-        onExpandedChange = onExpandChange,
-        modifier = Modifier.fillMaxWidth()
-    ) {
-        OutlinedTextField(
-            value = text,
-            onValueChange = {},
-            readOnly = true,
-            modifier = Modifier
-                .fillMaxWidth()
-                .menuAnchor(),
-            trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded) },
-            colors = OutlinedTextFieldDefaults.colors(
-                focusedTextColor = MaterialTheme.colorScheme.onSurface,
-                unfocusedTextColor = MaterialTheme.colorScheme.onSurface,
-                disabledTextColor = MaterialTheme.colorScheme.onSurface,
-                focusedBorderColor = MaterialTheme.colorScheme.outline,
-                unfocusedBorderColor = MaterialTheme.colorScheme.outline,
-                disabledBorderColor = MaterialTheme.colorScheme.outline,
-            )
-        )
-        ExposedDropdownMenu(
-            expanded = expanded,
-            onDismissRequest = { onExpandChange(false) }
-        ) {
-            content()
         }
     }
 }

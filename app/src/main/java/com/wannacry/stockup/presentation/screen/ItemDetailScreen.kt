@@ -34,7 +34,6 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -51,8 +50,9 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.wannacry.stockup.presentation.navigation.Screen
-import com.wannacry.stockup.presentation.viewmodel.StockUpViewModel
+import com.wannacry.stockup.presentation.viewmodel.BaseStockUpViewModel
 import org.koin.androidx.compose.koinViewModel
+import java.text.DecimalFormat
 import java.time.ZoneId
 import java.time.format.DateTimeFormatter
 import java.util.UUID
@@ -63,7 +63,7 @@ import java.util.UUID
 fun ItemDetailScreen(
     navController: NavController,
     itemId: String,
-    viewModel: StockUpViewModel = koinViewModel()
+    viewModel: BaseStockUpViewModel = koinViewModel()
 ) {
     var showDeleteDialog by remember { mutableStateOf(false) }
 
@@ -112,7 +112,11 @@ fun ItemDetailScreen(
             ) {
                 // Item Details Section
                 item { DetailItem("Nama Bahan", item.name) }
-                item { DetailItem("Kuantiti", item.quantity.toString()) }
+                item { 
+                    val df = DecimalFormat("#.###")
+                    val formattedQty = df.format(item.quantity)
+                    DetailItem("Kuantiti", formattedQty) 
+                }
                 item { DetailItem("Unit", item.unit) }
                 item {
                     item.expiryDate?.let {
@@ -130,7 +134,7 @@ fun ItemDetailScreen(
 
                 item { Spacer(modifier = Modifier.height(24.dp)) }
 
-                // History Section inside a single Card
+                // History Section
                 item {
                     Card(
                         modifier = Modifier.fillMaxWidth(),
@@ -189,23 +193,24 @@ fun ItemDetailScreen(
                     OutlinedButton(
                         onClick = { navController.navigate(Screen.EditItem.createRoute(itemId)) },
                         shape = RoundedCornerShape(8.dp),
+                        border = BorderStroke(
+                            width = 1.5.dp,
+                            color = MaterialTheme.colorScheme.primary
+                        ),
                         modifier = Modifier.fillMaxWidth()
                     ) {
-                        Text("Edit Butiran")
+                        Text("Edit Butiran", color = MaterialTheme.colorScheme.primary, fontWeight = FontWeight.Medium)
                     }
                 }
                 item { Spacer(modifier = Modifier.height(8.dp)) }
                 item {
-                    OutlinedButton(
+                    Button(
                         onClick = { showDeleteDialog = true },
-                        border = BorderStroke(
-                            width = 1.dp,
-                            color = MaterialTheme.colorScheme.error
-                        ),
-                        shape = RoundedCornerShape(8.dp),
+                        colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.error),
+                        shape = RoundedCornerShape(12.dp),
                         modifier = Modifier.fillMaxWidth()
                     ) {
-                        Text("Padam Bahan", color = MaterialTheme.colorScheme.error)
+                        Text("Padam Bahan")
                     }
                 }
             }
@@ -252,7 +257,7 @@ fun ItemDetailScreen(
                             containerColor = Color(0xFFF1F1F1),
                             contentColor = Color.DarkGray
                         ),
-                        shape = RoundedCornerShape(8.dp),
+                        shape = RoundedCornerShape(12.dp),
                     ) {
                         Text("Cancel")
                     }
@@ -268,22 +273,20 @@ fun ItemDetailScreen(
                             showDeleteDialog = false
                         },
                         colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.error),
-                        shape = RoundedCornerShape(8.dp),
+                        shape = RoundedCornerShape(12.dp),
                     ) {
-                        Text("Confirm")
+                        Text("Delete")
                     }
                 }
-
-            },
-            dismissButton = { },
+            }
         )
     }
 }
 
 @Composable
-private fun DetailItem(label: String, value: String) {
+fun DetailItem(label: String, value: String) {
     Column(modifier = Modifier.padding(vertical = 8.dp)) {
-        Text(label, style = MaterialTheme.typography.bodySmall, color = Color.Gray)
-        Text(value, style = MaterialTheme.typography.bodyLarge)
+        Text(text = label, style = MaterialTheme.typography.labelMedium, color = Color.Gray)
+        Text(text = value, style = MaterialTheme.typography.bodyLarge, fontWeight = FontWeight.Medium)
     }
 }

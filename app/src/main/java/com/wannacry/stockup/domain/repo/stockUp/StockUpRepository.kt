@@ -1,6 +1,5 @@
-package com.wannacry.stockup.domain.repo
+package com.wannacry.stockup.domain.repo.stockUp
 
-import com.wannacry.stockup.domain.data.Category
 import com.wannacry.stockup.domain.data.Item
 import com.wannacry.stockup.domain.data.StockHistory
 import kotlinx.coroutines.flow.Flow
@@ -9,12 +8,7 @@ import java.util.UUID
 
 interface StockUpRepository {
 
-    // CATEGORY
-    fun getCategories(): Flow<List<Category>>
-    suspend fun addCategory(category: Category)
-    suspend fun deleteCategory(id: UUID)
-
-    // ITEMS
+    //ITEM
     fun getItems(): Flow<List<Item>>
     suspend fun getItem(id: UUID): Item?
     suspend fun addItem(item: Item)
@@ -23,6 +17,6 @@ interface StockUpRepository {
     suspend fun getExpiringOnOrBefore(date: LocalDate): List<Item>
     suspend fun markExpired(id: UUID)
 
-    // HISTORY
+    //HISTORY
     fun getHistory(itemId: UUID): Flow<List<StockHistory>>
 }

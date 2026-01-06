@@ -1,13 +1,11 @@
-package com.wannacry.stockup.domain.repo
+package com.wannacry.stockup.domain.repo.stockUp
 
 import android.os.Build
 import androidx.annotation.RequiresApi
+import com.wannacry.stockup.config.ActionType
 import com.wannacry.stockup.config.StockIndicator
-import com.wannacry.stockup.domain.dao.CategoryDao
 import com.wannacry.stockup.domain.dao.ItemDao
 import com.wannacry.stockup.domain.dao.StockHistoryDao
-import com.wannacry.stockup.domain.data.ActionType
-import com.wannacry.stockup.domain.data.Category
 import com.wannacry.stockup.domain.data.Item
 import com.wannacry.stockup.domain.data.StockHistory
 import com.wannacry.stockup.domain.data.mapper.toDomain
@@ -21,22 +19,9 @@ import java.util.UUID
 
 @RequiresApi(Build.VERSION_CODES.O)
 class StockUpRepositoryImpl(
-    private val categoryDao: CategoryDao,
     private val itemDao: ItemDao,
-    private val historyDao: StockHistoryDao
+    private val historyDao: StockHistoryDao,
 ) : StockUpRepository {
-
-    // CATEGORY
-    override fun getCategories(): Flow<List<Category>> =
-        categoryDao.getAll().map { list -> list.map { it.toDomain() } }
-
-    override suspend fun addCategory(category: Category) {
-        categoryDao.insert(category.toEntity())
-    }
-
-    override suspend fun deleteCategory(id: UUID) {
-        categoryDao.deleteById(id)
-    }
 
     // ITEMS
     override fun getItems(): Flow<List<Item>> =

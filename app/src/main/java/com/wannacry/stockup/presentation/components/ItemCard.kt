@@ -30,6 +30,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.wannacry.stockup.config.StockIndicator
 import com.wannacry.stockup.domain.data.Item
+import java.text.DecimalFormat
 import java.time.format.DateTimeFormatter
 
 @RequiresApi(Build.VERSION_CODES.O)
@@ -41,7 +42,8 @@ fun ItemCard(
     onClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
-//    val isFinished = item.stockIndicator == StockIndicator.EMPTY
+    val df = DecimalFormat("#.###")
+    val formattedQuantity = df.format(item.quantity)
 
     Card(
         modifier = modifier
@@ -59,7 +61,7 @@ fun ItemCard(
             modifier = Modifier.padding(16.dp)
         ) {
             Text(text = item.name, style = MaterialTheme.typography.titleLarge, fontWeight = FontWeight.SemiBold, color = MaterialTheme.colorScheme.onPrimaryContainer)
-            Text(text = "${item.quantity} ${item.unit}", style = MaterialTheme.typography.bodyLarge)
+            Text(text = "$formattedQuantity ${item.unit}", style = MaterialTheme.typography.bodyLarge)
             Spacer(modifier = Modifier.height(8.dp))
             if (item.expiryDate != null) {
                 Row(verticalAlignment = Alignment.CenterVertically) {
@@ -79,7 +81,7 @@ fun ItemCard(
                 when (stockIndicator) {
                     StockIndicator.EMPTY.name -> {
                         Text(
-                            text = "Stok telah habis",
+                            text = "Out of Stock",
                             color = Color.White,
                             modifier = Modifier
                                 .background(
@@ -92,7 +94,7 @@ fun ItemCard(
 
                     StockIndicator.LOW.name -> {
                         Text(
-                            text = "Stok hampir habis",
+                            text = "Stock Low",
                             color = Color.White,
                             modifier = Modifier
                                 .background(Color(0xFFFFA500), shape = MaterialTheme.shapes.small)
@@ -120,16 +122,6 @@ fun ItemCard(
                         )
                     }
                 }
-//                Button(
-//                    onClick = { onMarkAsFinished(item) },
-//                    colors = ButtonDefaults.buttonColors(
-//                        containerColor = if (isFinished) Color.Red else Color.Transparent,
-//                        contentColor = if (isFinished) Color.White else Color.Red
-//                    ),
-//                    shape = MaterialTheme.shapes.medium
-//                ) {
-//                    Text(if (isFinished) "Telah Habis" else "Tandakan Habis")
-//                }
             }
         }
     }

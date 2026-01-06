@@ -27,7 +27,6 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.NavGraph.Companion.findStartDestination
@@ -43,6 +42,8 @@ import com.wannacry.stockup.presentation.screen.AddItemScreen
 import com.wannacry.stockup.presentation.screen.HomeScreen
 import com.wannacry.stockup.presentation.screen.ItemDetailScreen
 import com.wannacry.stockup.presentation.screen.SettingsScreen
+import com.wannacry.stockup.presentation.screen.TaskDetailScreen
+import com.wannacry.stockup.presentation.screen.TaskScreen
 import com.wannacry.stockup.ui.theme.StockUpTheme
 
 class MainActivity : ComponentActivity() {
@@ -89,10 +90,17 @@ class MainActivity : ComponentActivity() {
                                         bottomNavItems.forEach { screen ->
                                             val selected = currentDestination?.hierarchy?.any { it.route == screen.route } == true
                                             NavigationBarItem(
-                                                icon = { if (selected) Icon(screen.selectedIcon, contentDescription = screen.title) else Icon(screen.icon, contentDescription = screen.title) },
+                                                icon = {
+                                                    Icon(
+                                                        if (selected)
+                                                            screen.selectedIcon
+                                                        else
+                                                            screen.icon, contentDescription = screen.title
+                                                    )
+                                                },
                                                 label = { Text(screen.title) },
                                                 selected = selected,
-                                                alwaysShowLabel = selected,
+                                                alwaysShowLabel = true,
                                                 onClick = {
                                                     navController.navigate(screen.route) {
                                                         popUpTo(navController.graph.findStartDestination().id) {
@@ -113,18 +121,18 @@ class MainActivity : ComponentActivity() {
                     NavHost(
                         navController,
                         startDestination = BottomNavItem.Home.route,
-                        modifier = Modifier.padding(PaddingValues(
-                            start = innerPadding.calculateStartPadding(LayoutDirection.Ltr),
-                            end = innerPadding.calculateEndPadding(LayoutDirection.Ltr),
-                            bottom = innerPadding.calculateBottomPadding()
-                        ))
+                        modifier = Modifier.padding(
+                            PaddingValues(
+                                start = innerPadding.calculateStartPadding(androidx.compose.ui.unit.LayoutDirection.Ltr),
+                                end = innerPadding.calculateEndPadding(androidx.compose.ui.unit.LayoutDirection.Ltr),
+                                bottom = innerPadding.calculateBottomPadding()
+                            )
+                        )
                     ) {
                         composable(BottomNavItem.Home.route) { HomeScreen(navController) }
-                        composable(BottomNavItem.Task.route) {
-                            Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) { Text("Task Screen") }
-                        }
-                        composable(BottomNavItem.Reports.route) { 
-                            Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) { Text("Reports Screen") }
+                        composable(BottomNavItem.Task.route) { TaskScreen(navController) }
+                        composable(BottomNavItem.Reports.route) {
+                            Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) { Text("Reports Screen (Coming Soon)") }
                         }
                         composable(BottomNavItem.Settings.route) { SettingsScreen(navController) }
                         composable(Screen.AddItem.route) { AddItemScreen(navController) }
@@ -144,6 +152,15 @@ class MainActivity : ComponentActivity() {
                             val itemId = backStackEntry.arguments?.getString("itemId")
                             if (itemId != null) {
                                 ItemDetailScreen(navController = navController, itemId = itemId)
+                            }
+                        }
+                        composable(
+                            route = Screen.TaskDetail.route,
+                            arguments = listOf(navArgument("taskId") { type = NavType.StringType })
+                        ) { backStackEntry ->
+                            val taskId = backStackEntry.arguments?.getString("taskId")
+                            if (taskId != null) {
+                                TaskDetailScreen(navController = navController, taskId = taskId)
                             }
                         }
                     }

@@ -56,7 +56,7 @@ import com.wannacry.stockup.domain.data.Category
 import com.wannacry.stockup.domain.data.Item
 import com.wannacry.stockup.presentation.components.ItemCard
 import com.wannacry.stockup.presentation.navigation.Screen
-import com.wannacry.stockup.presentation.viewmodel.StockUpViewModel
+import com.wannacry.stockup.presentation.viewmodel.BaseStockUpViewModel
 import org.koin.androidx.compose.koinViewModel
 
 @RequiresApi(Build.VERSION_CODES.O)
@@ -65,7 +65,7 @@ import org.koin.androidx.compose.koinViewModel
 fun HomeScreen(
     navController: NavController,
     modifier: Modifier = Modifier,
-    viewModel: StockUpViewModel = koinViewModel()
+    viewModel: BaseStockUpViewModel = koinViewModel()
 ) {
     val uiState by viewModel.uiState.collectAsState()
     var isSearchActive by remember { mutableStateOf(false) }
@@ -95,7 +95,8 @@ fun HomeScreen(
                 } else {
                     Text(
                         text = "StockUp",
-                        style = MaterialTheme.typography.headlineMedium
+                        fontWeight = FontWeight.Bold
+//                        style = MaterialTheme.typography.headlineMedium
                     )
                 }
             }
@@ -218,7 +219,7 @@ fun HomeScreen(
 fun ShowListItem(
     items: List<Item>?,
     category: Category?,
-    viewModel: StockUpViewModel = koinViewModel(),
+    viewModel: BaseStockUpViewModel = koinViewModel(),
     navController: NavController
 ) {
     val categoryString = if (category?.name.isNullOrEmpty()) "" else "for ${category.name}"

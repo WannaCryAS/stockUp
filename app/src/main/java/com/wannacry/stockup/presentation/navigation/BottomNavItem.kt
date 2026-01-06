@@ -19,6 +19,6 @@ sealed class BottomNavItem(
 ) {
     object Home : BottomNavItem("home", "Home", Icons.Outlined.Home, Icons.Default.Home)
     object Task : BottomNavItem("task", "Task", Icons.Outlined.Task, Icons.Default.Task)
-    object Reports : BottomNavItem("reports", "Laporan", Icons.Outlined.Assessment, Icons.Default.Assessment)
+    object Reports : BottomNavItem("reports", "Report", Icons.Outlined.Assessment, Icons.Default.Assessment)
     object Settings : BottomNavItem("settings", "Tetapan", Icons.Outlined.Settings, Icons.Default.Settings)
 }

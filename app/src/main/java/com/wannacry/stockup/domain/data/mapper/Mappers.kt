@@ -5,9 +5,11 @@ import androidx.annotation.RequiresApi
 import com.wannacry.stockup.domain.data.Category
 import com.wannacry.stockup.domain.data.Item
 import com.wannacry.stockup.domain.data.StockHistory
+import com.wannacry.stockup.domain.data.Task
 import com.wannacry.stockup.domain.db.entity.CategoryEntity
 import com.wannacry.stockup.domain.db.entity.ItemEntity
 import com.wannacry.stockup.domain.db.entity.StockHistoryEntity
+import com.wannacry.stockup.domain.db.entity.TaskEntity
 
 @RequiresApi(Build.VERSION_CODES.O)
 fun CategoryEntity.toDomain(): Category = Category(
@@ -70,5 +72,21 @@ fun StockHistory.toEntity(): StockHistoryEntity = StockHistoryEntity(
     actionType = this.actionType,
     description = this.description,
     quantityChange = this.quantityChange,
+    createdAt = this.createdAt
+)
+
+@RequiresApi(Build.VERSION_CODES.O)
+fun TaskEntity.toDomain(): Task = Task(
+    id = this.id,
+    title = this.title,
+    description = this.description,
+    createdAt = this.createdAt
+)
+
+@RequiresApi(Build.VERSION_CODES.O)
+fun Task.toEntity(): TaskEntity = TaskEntity(
+    id = this.id,
+    title = this.title,
+    description = this.description,
     createdAt = this.createdAt
 )

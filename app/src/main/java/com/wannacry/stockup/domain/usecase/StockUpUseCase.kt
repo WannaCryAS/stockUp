@@ -1,9 +1,8 @@
 package com.wannacry.stockup.domain.usecase
 
-import com.wannacry.stockup.domain.data.Category
 import com.wannacry.stockup.domain.data.Item
 import com.wannacry.stockup.domain.data.StockHistory
-import com.wannacry.stockup.domain.repo.StockUpRepository
+import com.wannacry.stockup.domain.repo.stockUp.StockUpRepository
 import kotlinx.coroutines.flow.Flow
 import java.util.UUID
 
@@ -23,16 +22,6 @@ class StockUpUseCase(private val repository: StockUpRepository) {
 
     suspend fun deleteItem(id: UUID) {
         repository.deleteItem(id)
-    }
-
-    fun getAllCategories(): Flow<List<Category>> = repository.getCategories()
-
-    suspend fun addCategory(category: Category) {
-        repository.addCategory(category)
-    }
-
-    suspend fun deleteCategory(id: UUID) {
-        repository.deleteCategory(id)
     }
 
     fun getHistory(itemId: UUID): Flow<List<StockHistory>> = repository.getHistory(itemId)
